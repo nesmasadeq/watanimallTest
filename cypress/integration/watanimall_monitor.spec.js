@@ -51,7 +51,7 @@ describe("Add monitor to cart in Watanimall",()=>{
         cy.get('select[name="orderby"]').select('price',{force:true}).should('have.value','price')
         cy.get('option[value="price"]').should('be.selected')
     })
-    it("Verify the results filtered by low to high price",()=>{
+    it.skip("Verify the results filtered by low to high price",()=>{
         cy.get('div.shop-products-holder > div.products-row.facetwp-template > div:nth-child(2) > div > div.product-price > span > bdi').then((el)=>{
             el.text()
         })
@@ -85,8 +85,7 @@ describe("Add monitor to cart in Watanimall",()=>{
                     cy.get('.btn-cart').click()
                     cy.get('.custom-form').should('be.visible')
                 }
-            })
-            
+            })  
         })
         it("Verify the product name in the cart is simmiler to selected",function(){
             cy.get('.product-name-image > .product-name > a').first().should('contain',this.firstProductName)
@@ -135,6 +134,9 @@ describe("Add monitor to cart in Watanimall",()=>{
         it("Verify the cart modal displayed after clicking on add to cart button",()=>{
             cy.get('.custom-form').should('be.visible')
         })
+        it("Verify the cart icon number increased to 3",()=>{
+            cy.get('#header span.counter').first().should('contain','3')
+        })
         it("Verify the length of products in the cart is icreased",()=>{
            cy.get('div.mini-cart-body .cart-item').should('have.length',2)
         })
@@ -145,9 +147,18 @@ describe("Add monitor to cart in Watanimall",()=>{
             cy.get('#mCSB_1_container div.product-amount span bdi').last().should('contain',this.secondProductPrice)
         })
     })
+    context("Removing first product from list",()=>{
+        it("Verify the total price of products equal to summation of two products",()=>{
+            let totalPrice=this.firstProductPrice +this.secondProductPrice
+            cy.get('div.cart-sub-total span bdi').should('contain',totalPrice)
+        })
+        it("Verify clicking on delete button",()=>{
+            cy.get('.cart-item a[data-key="a6c6671bb25e51d6d95712fe85e138b3"]:first-child').should('contain','ازالة').click()
+        })
+        it("Verify the product removed form the list",()=>{
+            cy.get('div.mini-cart-body .cart-item').should('have.length',1)
+        })
+    })
     
-
-    
-    
-    
+  
 })
