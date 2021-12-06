@@ -1,0 +1,22 @@
+{
+  "name": "watanimall_nesma_sadeq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nesmasadeq/watanimall_Nesma_Sadeq.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nesmasadeq/watanimall_Nesma_Sadeq/issues"
+  },
+  "homepage": "https://github.com/nesmasadeq/watanimall_Nesma_Sadeq#readme",
+  "devDependencies": {
+    "cypress": "^9.1.1"
+  }
+}
