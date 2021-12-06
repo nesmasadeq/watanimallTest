@@ -3,9 +3,9 @@ describe("Add monitor to cart in Watanimall",()=>{
     before(()=>{
         cy.visit("/")
     })
-    it("Verify Hovering on 'all categories' menu item",()=>{
+    it.skip("Verify Hovering on 'all categories' menu item",()=>{
         cy.get('li[id="menu-item-104788"]').trigger('mouseover')
-        // cy.get('li[id="menu-item-104788"]').should('have.class','hover')
+        cy.get('li[id="menu-item-104788"]').should('have.class','hover')
     })
     it("Verify clicking on 'all categories' menu item",()=>{
         cy.get('li[id="menu-item-104788"]').click()
@@ -16,6 +16,9 @@ describe("Add monitor to cart in Watanimall",()=>{
     })
     it("Verify the head label content in all categories page",()=>{
         cy.get('#main h1').should('contain','جميع الفئات')
+    })
+    it("Verify the cart count is zero",()=>{
+        cy.get('#header span.counter').last().should('contain','0')
     })
     it("Verify the monitor category is found in the list",()=>{
         cy.get('a[href="https://watanimall.com/product-category/monitors"]').should('contain','MONITORS')
@@ -53,12 +56,43 @@ describe("Add monitor to cart in Watanimall",()=>{
             el.text()
         })
     })
-    it("Verify 'Add to the cart' button is displayed when hovering on product",()=>{
-        cy.get('.products-row div.product-col:first-child').trigger('mouseover',{force:true})
-        cy.get('a[data-id="107188"]').should('be.visible')
+    context('Adding first monitor to cart',()=>{
+        beforeEach(()=>{
+            cy.get('.products-row div:nth-child(1) div h3').then((el)=>{
+                cy.wrap(el.text()).as('firstProductName')
+            }) 
+            cy.get('.product-price span bdi').first().then((el)=>{
+                cy.wrap(el.text()).as('firstProductPrice')
+            })
+        })
+        it.skip("Verify 'Add to the cart' button is displayed when hovering on product",()=>{
+            cy.get('.products-row div.product-col:first-child').trigger('mouseover',{force:true})
+            cy.get('a[data-id="107188"]').should('be.visible')
+        })
+        it("Verify clicking on 'Add to the cart' button",()=>{
+            cy.get('a[data-id="107188"]').should('contain','Add to the cart').click({force:true})
+        })
+        it("Verify the cart count is increased by 1",()=>{
+            cy.get('#header span.counter',{timeout:5000}).first().should('contain','1')
+        })
+        it("Verify hovering on cart icon",()=>{
+            cy.get('#header div.heder-action-nav').trigger('mouseover')
+            cy.get('#header div.heder-action-nav').should('have.class','hover')
+        })
+        it("Verify clicking on cart icon displayed modal",()=>{
+            cy.get('.btn-cart').click()
+            cy.get('.custom-form').should('be.visible')
+        })
+        it("Verify the product name in the cart is simmiler to selected",function(){
+            cy.get('#mCSB_1_container strong a').first().should('contain',this.firstProductName)
+        })
+        it("Verify the product price in the cart is similer to selected",function(){
+            cy.get('#mCSB_1_container div.product-amount span bdi').first().should('contain',this.firstProductPrice)
+        })
     })
-    it("Verify clicking on 'Add to the cart' button",()=>{
-        cy.get('a[data-id="107188"]').should('contain','Add to the cart').click({force:true})
-    })
+    
+
+    
+    
     
 })
