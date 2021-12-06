@@ -61,8 +61,15 @@ describe("Add monitor to cart in Watanimall",()=>{
     })
     it.skip("Verify the results filtered by low to high price",()=>{
         cy.get('div.shop-products-holder > div.products-row.facetwp-template > div:nth-child(2) > div > div.product-price > span > bdi').then((el)=>{
-            el.text()
+            cy.wrap(el.text()).as('secondPrice')
         })
+        cy.get('div.shop-products-holder > div.products-row.facetwp-template > div:nth-child(1) > div > div.product-price > span > bdi').then((el)=>{
+            cy.wrap(el.text()).as('firstPrice')
+        })
+        if(this.secondPrice>this.firstPrice){
+            cy.log('success')
+        }
+
     })
     context('Adding first monitor to cart',()=>{
         beforeEach(()=>{
