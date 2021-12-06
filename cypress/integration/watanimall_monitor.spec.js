@@ -44,4 +44,14 @@ describe("Add monitor to cart in Watanimall",()=>{
     it("Verify the results contain ASUS after checking on ASUS manufacturer",()=>{
         cy.get('.products-row').should('contain','ASUS')
     })
+    it("Verify filtering products from low to high price",()=>{
+        cy.get('select[name="orderby"]').select('price',{force:true}).should('have.value','price')
+        cy.get('option[value="price"]').should('be.selected')
+    })
+    it("Verify the results filtered by low to high price",()=>{
+        cy.get('div.shop-products-holder > div.products-row.facetwp-template > div:nth-child(2) > div > div.product-price > span > bdi').then((el)=>{
+            el.text()
+        })
+    })
+    
 })
