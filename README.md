@@ -1,4 +1,4 @@
-# watanimall Test to checkout monitor 
+# Watanimall Test to checkout monitor 
 This test is done by cypress to test checking monitor with type ASUS
 # Getting Started 
 1. Install cypress
