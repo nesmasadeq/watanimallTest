@@ -27,12 +27,21 @@ describe("Add monitor to cart in Watanimall",()=>{
         cy.get('#main div.category-row div:nth-child(3)').trigger('mouseover')
     })
     it("Verify clicking on monitors category",()=>{
-        cy.get('a[href="https://watanimall.com/product-category/monitors"]').click()
+        cy.get('#main div.category-row div:nth-child(3)').click()
     })
     it("Verify the user redirect to monitors page after clicking on monitors category",()=>{
         cy.url().should('include','/monitors')
     })
     it("Verify the head label content in monitors page",()=>{
-        cy.get('#main h1').should('include','MONITORS')
+        cy.get('#main h1').should('contain','MONITORS')
+    })
+    it("Verify checking on ASUS manufacturer",()=>{
+        cy.get('div[data-value="asus"]').should('contain','ASUS').click()
+    })
+    it("Verify the ASUS manufacturer is checked after clicking",()=>{
+        cy.get('div[data-value="asus"]').should('have.class','checked')
+    })
+    it("Verify the results contain ASUS after checking on ASUS manufacturer",()=>{
+        cy.get('.products-row').should('contain','ASUS')
     })
 })
