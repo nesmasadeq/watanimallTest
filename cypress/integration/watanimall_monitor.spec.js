@@ -10,7 +10,6 @@ describe("Add monitor to cart in Watanimall",()=>{
             }
           })
     })
-    
     it.skip("Verify Hovering on 'all categories' menu item",()=>{
         cy.get('li[id="menu-item-104788"]').trigger('mouseover')
         cy.get('li[id="menu-item-104788"]').should('have.class','hover')
@@ -163,8 +162,7 @@ describe("Add monitor to cart in Watanimall",()=>{
             cy.get('div.cart-sub-total span bdi').should('contain',totalPrice)
         })
     })
-    context("Removing first product from list",()=>{
-       
+    context("Removing first product from list",()=>{  
         it("Verify clicking on delete button",()=>{
             cy.get('.cart-remove').first().click()
         })
