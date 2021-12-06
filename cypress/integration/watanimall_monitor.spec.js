@@ -3,6 +3,14 @@ describe("Add monitor to cart in Watanimall",()=>{
     before(()=>{
         cy.visit("/")
     })
+    beforeEach(()=>{
+        Cypress.Cookies.defaults({
+            preserve: (cookie) => {
+              return true;
+            }
+          })
+    })
+    
     it.skip("Verify Hovering on 'all categories' menu item",()=>{
         cy.get('li[id="menu-item-104788"]').trigger('mouseover')
         cy.get('li[id="menu-item-104788"]').should('have.class','hover')
@@ -59,10 +67,10 @@ describe("Add monitor to cart in Watanimall",()=>{
     context('Adding first monitor to cart',()=>{
         beforeEach(()=>{
             cy.get('.products-row div:nth-child(1) div h3').then((el)=>{
-                cy.wrap(el.text()).as('firstProductName')
+                cy.wrap(el.text().trim().substring(0,20)).as('firstProductName')
             }) 
             cy.get('.product-price span bdi').first().then((el)=>{
-                cy.wrap(el.text()).as('firstProductPrice')
+                cy.wrap(el.text().trim()).as('firstProductPrice')
             })
         })
         it.skip("Verify 'Add to the cart' button is displayed when hovering on product",()=>{
@@ -75,55 +83,52 @@ describe("Add monitor to cart in Watanimall",()=>{
         it("Verify the cart count is increased by 1",()=>{
             cy.get('#header span.counter',{timeout:5000}).first().should('contain','1')
         })
+        it("Verify the cart modal dispalyed after clicking on add to cart",()=>{
+            cy.get('.custom-form').should('be.visible')
+        })
         it.skip("Verify hovering on cart icon",()=>{
             cy.get('#header div.heder-action-nav').trigger('mouseover')
             cy.get('#header div.heder-action-nav').should('have.class','hover')
         })
-        it.skip("Verify clicking on cart icon displayed modal",()=>{
-            cy.get('body').then((el)=>{
-                if(el.find('.custom-form').length<0){
-                    cy.get('.btn-cart').click()
-                    cy.get('.custom-form').should('be.visible')
-                }
-            })  
-        })
         it("Verify the product name in the cart is simmiler to selected",function(){
-            cy.get('.product-name-image > .product-name > a').first().should('contain',this.firstProductName)
+            cy.get('.product-name-image > .product-name > a',{timeout:5000}).first().should('contain',this.firstProductName)
         })
-        it("Verify the product price in the cart is similer to selected",function(){
-            cy.get('#mCSB_1_container div.product-amount span bdi').first().should('contain',this.firstProductPrice)
+        it.skip("Verify the product price in the cart is similer to selected",function(){
+            cy.get('.product-amount bdi').first().should('contain',this.firstProductPrice)
+        })
+    })
+    context('Clicking on second item',()=>{
+        it("Verify clicking on second monitor item",()=>{
+            cy.get('.products-row div.product-col:nth-child(2) h3 a').click({force:true})
+        })
+        it("Verify the user redirect to selected product page after clicking on second product",()=>{
+            cy.url().should('include','monitor')
         })
     })
     context('Adding second monitor to cart',()=>{
         beforeEach(()=>{
-            cy.get('.products-row div:nth-child(2) div h3').then((el)=>{
-                cy.wrap(el.text()).as('secondProductName')
+            cy.get('#main h1').then((el)=>{
+                cy.wrap(el.text().trim().substring(0,20)).as('secondProductName')
             }) 
-            cy.get('.product-price span bdi').first().then((el)=>{
-                cy.wrap(el.text()).as('secondProductPrice')
+            cy.get('.price span bdi').first().then((el)=>{
+                cy.wrap(el.text().split('</span>')).as('secondProductPrice')
             })
         }) 
-        it("Verify clicking on second monitor item",()=>{
-            cy.get('.products-row div.product-col:nth-child(2)').click()
-        })
-        it("Verify the user redirect to selected product page after clicking on second product",()=>{
-            cy.url().should('include','monitor-asus')
-        })
-        it("Verify the head label content in selected product",()=>{
+        it("Verify the head label content in selected product",function(){
             cy.get('#main h1').should('contain',this.secondProductName)
         })
         it("Verify the quantity number is 1 by defualt",()=>{
-            cy.get('#quantity_61adf63e45535').should('contain','1')
+            cy.get('input[id^="quantity"]').should('have.value','1')
         })
         it.skip("Verify hovering plus button change its color",()=>{
             cy.get('.cart-quantity .jcf-btn-inc').trigger('mouseover')
             cy.get('.cart-quantity .jcf-btn-inc').should('have.class',)
         })
         it("Verify clicking on plus button",()=>{
-            cy.get('.cart-quantity .jcf-btn-inc').click()
+            cy.get('.quantity .jcf-btn-inc').click({force:true})
         })
         it("Verify the quantity number increased after clicking plus button",()=>{
-            cy.get('#quantity_61adf63e45535').should('contain','2')
+            cy.get('input[id^="quantity"]').should('have.value','2')
         })
         it.skip("Verify hovering on add to cart button",()=>{
             cy.get('button[name="add-to-cart"]').trigger('mouseover').should('have.class','')
@@ -140,25 +145,25 @@ describe("Add monitor to cart in Watanimall",()=>{
         it("Verify the length of products in the cart is icreased",()=>{
            cy.get('div.mini-cart-body .cart-item').should('have.length',2)
         })
-        it("Verify the second product added to the cart",()=>{
+        it("Verify the second product added to the cart",function(){
           cy.get('.product-name-image > .product-name > a').last().should('contain',this.secondProductName)
         })
-        it("Verify the second product price in the cart is similer to selected",function(){
-            cy.get('#mCSB_1_container div.product-amount span bdi').last().should('contain',this.secondProductPrice)
+        it.skip("Verify the second product price in the cart is similer to selected",function(){
+            cy.get('.product-amount bdi').last().should('contain',this.secondProductPrice)
         })
-    })
-    context("Removing first product from list",()=>{
-        it("Verify the total price of products equal to summation of two products",()=>{
+        it.skip("Verify the total price of products equal to summation of two products",function(){
             let totalPrice=this.firstProductPrice +this.secondProductPrice
             cy.get('div.cart-sub-total span bdi').should('contain',totalPrice)
         })
+    })
+    context("Removing first product from list",()=>{
+       
         it("Verify clicking on delete button",()=>{
-            cy.get('.cart-item a[data-key="a6c6671bb25e51d6d95712fe85e138b3"]:first-child').should('contain','ازالة').click()
+            cy.get('.cart-remove').first().click()
         })
         it("Verify the product removed form the list",()=>{
             cy.get('div.mini-cart-body .cart-item').should('have.length',1)
         })
     })
     
-  
 })
