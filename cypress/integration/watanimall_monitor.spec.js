@@ -53,5 +53,12 @@ describe("Add monitor to cart in Watanimall",()=>{
             el.text()
         })
     })
+    it("Verify 'Add to the cart' button is displayed when hovering on product",()=>{
+        cy.get('.products-row div.product-col:first-child').trigger('mouseover',{force:true})
+        cy.get('a[data-id="107188"]').should('be.visible')
+    })
+    it("Verify clicking on 'Add to the cart' button",()=>{
+        cy.get('a[data-id="107188"]').should('contain','Add to the cart').click({force:true})
+    })
     
 })
