@@ -58,26 +58,34 @@ describe("Add monitor to cart in Watanimall",()=>{
         cy.get('select[name="orderby"]').select('price',{force:true}).should('have.value','price')
         cy.get('option[value="price"]').should('be.selected')
     })
-    it.skip("Verify the results filtered by low to high price",()=>{
-        cy.get('div.shop-products-holder > div.products-row.facetwp-template > div:nth-child(2) > div > div.product-price > span > bdi').then((el)=>{
-            cy.wrap(el.text()).as('secondPrice')
+    it("Verify the results filtered by low to high price",()=>{
+        cy.get('.product-col bdi').then(function(el){
+            for(let i=0; i<el.length -1;i++){
+                let price = el[i].textContent.replace(/\₪|,/g, '')
+                let nextPrice= el[i+1].textContent.replace(/\₪|,/g, '')
+                if(price < nextPrice){
+                    cy.log('success filter')
+                }
+            }
         })
-        cy.get('div.shop-products-holder > div.products-row.facetwp-template > div:nth-child(1) > div > div.product-price > span > bdi').then((el)=>{
-            cy.wrap(el.text()).as('firstPrice')
-        })
-        if(this.secondPrice>this.firstPrice){
-            cy.log('success')
-        }
-
     })
     context('Adding first monitor to cart',()=>{
         beforeEach(()=>{
             cy.get('.products-row div:nth-child(1) div h3').then((el)=>{
                 cy.wrap(el.text().trim().substring(0,20)).as('firstProductName')
             }) 
-            cy.get('.product-price span bdi').first().then((el)=>{
-                cy.wrap(el.text().trim()).as('firstProductPrice')
+            cy.get('.product-price').first().then((el)=>{
+                if(el.find('del[aria-hidden="true"]').length>0){
+                    cy.get('.woocommerce-Price-amount bdi').first().then(function(el){
+                        cy.wrap(el.text().trim()).as('firstProductPrice')
+                    })
+                }else{
+                    cy.get('.product-price span bdi').first().then(function(el){
+                        cy.wrap(el.text().trim()).as('firstProductPrice')
+                    })
+                }
             })
+            
         })
         it.skip("Verify 'Add to the cart' button is displayed when hovering on product",()=>{
             cy.get('.products-row div.product-col:first-child').trigger('mouseover',{force:true})
@@ -99,7 +107,7 @@ describe("Add monitor to cart in Watanimall",()=>{
         it("Verify the product name in the cart is simmiler to selected",function(){
             cy.get('.product-name-image > .product-name > a',{timeout:5000}).first().should('contain',this.firstProductName)
         })
-        it.skip("Verify the product price in the cart is similer to selected",function(){
+        it("Verify the product price in the cart is similer to selected",function(){
             cy.get('.product-amount bdi').first().should('contain',this.firstProductPrice)
         })
     })
@@ -117,7 +125,7 @@ describe("Add monitor to cart in Watanimall",()=>{
                 cy.wrap(el.text().trim().substring(0,20)).as('secondProductName')
             }) 
             cy.get('.price span bdi').first().then((el)=>{
-                cy.wrap(el.text().split('</span>')).as('secondProductPrice')
+                cy.wrap(el.text().replace(/\₪|,/g, '')).as('secondProductPrice')
             })
         }) 
         it("Verify the head label content in selected product",function(){
@@ -158,7 +166,7 @@ describe("Add monitor to cart in Watanimall",()=>{
             cy.get('.product-amount bdi').last().should('contain',this.secondProductPrice)
         })
         it.skip("Verify the total price of products equal to summation of two products",function(){
-            let totalPrice=this.firstProductPrice +this.secondProductPrice
+            let totalPrice=this.firstProductPrice + 2*(this.secondProductPrice)
             cy.get('div.cart-sub-total span bdi').should('contain',totalPrice)
         })
     })
