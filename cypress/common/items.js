@@ -6,4 +6,7 @@ export class CommonItems{
     cartCounterItem(){
         return cy.get('#header span.counter')
     }
+    cartFormItem(){
+        return cy.get('#header .custom-form').first()
+    }
 }

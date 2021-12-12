@@ -48,5 +48,31 @@ describe("Add monitor to cart in Watanimall",()=>{
     it("Verify the results filtered by low to high price",()=>{
       page.filterTest.testResultsAfterPriceSelectionFilter()
     })
+    context('Adding first monitor to cart by button in list page',()=>{
+      beforeEach(()=>{
+        page.addMonitorAction.getFirstProductName()
+        page.addMonitorAction.getFirstProductPrice()
+      })
+      it("Verify 'Add to the cart' button is displayed when hovering on product",()=>{
+        page.addMonitorTest.testAddCartButtonDisplayed()
+      })
+      it("Verify clicking on 'Add to the cart' button",()=>{
+        page.addMonitorTest.testAddToCartButtonContent()
+        page.addMonitorAction.clickingOnAddToCartButtonInIndex()
+      })
+      it("Verify the cart count is increased by 1",()=>{
+        page.addMonitorTest.testCartCount()
+      })
+      it("Verify the cart modal dispalyed after clicking on add to cart",()=>{
+        page.addMonitorTest.testCartFormDisplayed()
+      })
+      it("Verify the product name in the cart is simmiler to selected",function(){
+        page.addMonitorTest.testFirstProductLabelInCart()
+      })
+      it("Verify the product price in the cart is similer to selected",function(){
+        page.addMonitorAction.testFirstProductPriceInCart()
+      })
+
+    })
 
 })
