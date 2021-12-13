@@ -19,9 +19,17 @@ export class addMonitorTests{
         this.commonItems.cartFormItem().should('be.visible')
     }
     testFirstProductLabelInCart(){
-        this.items.firstProductLabelInCartItem().should('contain',this.firstProductName)
+        cy.get("@firstProductName").then((firstProductName)=>{
+            this.items.firstProductLabelInCartItem()
+            .should("contain",firstProductName)
+        })
+        // this.items.firstProductLabelInCartItem().should('contain',this.firstProductName)
     }
     testFirstProductPriceInCart(){
-        this.items.firstProductPriceInCartItem().should('contain',this.firstProductPrice)
+        cy.get("@firstProductPrice").then((firstProductPrice)=>{
+            this.items.firstProductPriceInCartItem()
+            .should("contain",firstProductPrice)
+        })
+        // this.items.firstProductPriceInCartItem().should('contain',this.firstProductPrice)
     }
 }
